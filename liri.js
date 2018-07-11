@@ -12,12 +12,33 @@ var askPrompt = function() {
             {
                 type: "list",
                 message: "Please select and option.",
-                choices: ["My Tweets", "Spotify This Song", "Movie This", "Do What is Says"],
+                choices: ["My Tweets", "Spotify This Song", "Movie This", "Do What it Says"],
                 name: "options"
             }
         ])
         .then(function(inquirerResponse) {
-            console.log(inquirerResponse.options);
+            
+
+            switch(inquirerResponse.options) {
+
+                case "My Tweets":
+                console.log("I'm twitting my tweeter!");
+                break;
+
+                case "Spotify This Song":
+                console.log("Find this song you dumb robot!");
+                break;
+
+                case "Movie This":
+                console.log("I love Movies!");
+                break;
+
+                case "Do What it Says":
+                console.log("I will do what you command!");
+                break;
+
+                default: console.log("That is not a valid option.")
+            }
 
             inquirer.prompt([
                 {
