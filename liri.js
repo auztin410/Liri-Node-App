@@ -29,7 +29,7 @@ var askPrompt = function () {
                 switch (inquirerResponse.options) {
 
                     case "My Tweets":
-                        
+
                         var params = { screen_name: 'Antonath' };
                         client.get('statuses/user_timeline', params, function (error, tweets, response) {
                             if (!error) {
@@ -53,7 +53,7 @@ var askPrompt = function () {
                                 console.log("Tweet #18: " + tweets[17].text);
                                 console.log("Tweet #19: " + tweets[18].text);
                                 console.log("Tweet #20: " + tweets[19].text);
-                                
+
                                 inquirer.prompt([
                                     {
                                         type: "confirm",
@@ -85,6 +85,19 @@ var askPrompt = function () {
                                 name: "songName"
                             }
                         ])
+                            .then(function (inquirerResponse) {
+                                spotify.search({ type: 'track', query: inquirerResponse.songName }, function (err, data) {
+                                    if (err) {
+                                        return console.log('Error occurred: ' + err);
+                                    }
+
+                                    console.log("Song Name: " + data.tracks.items[1].name);
+                                    console.log("Artists Name: " + data.tracks.items[1].artists[0].name);
+                                    console.log("Album Name: " + data.tracks.items[1].album.name);
+                                    console.log("href: " + data.tracks.href);
+
+                                });
+                            })
                         break;
 
                     case "Movie This":
@@ -98,7 +111,7 @@ var askPrompt = function () {
                     default: console.log("That is not a valid option.")
                 }
 
-                
+
             })
     }
 }
