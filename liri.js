@@ -4,6 +4,7 @@ var inquirer = require("inquirer");
 var Spotify = require('node-spotify-api');
 var Twitter = require('twitter');
 var key = require("./key.js");
+var request = require('request');
 
 console.log(key);
 
@@ -77,12 +78,13 @@ var askPrompt = function () {
                         break;
 
                     case "Spotify This Song":
-                        console.log("Find this song you dumb robot!");
+
                         inquirer.prompt([
                             {
                                 type: "input",
                                 message: "What song do you want to search for?",
-                                name: "songName"
+                                name: "songName",
+                                default: "The Sign"
                             }
                         ])
                             .then(function (inquirerResponse) {
@@ -96,12 +98,74 @@ var askPrompt = function () {
                                     console.log("Album Name: " + data.tracks.items[1].album.name);
                                     console.log("href: " + data.tracks.href);
 
+                                    inquirer.prompt([
+                                        {
+                                            type: "confirm",
+                                            message: "Do you want to continue?",
+                                            name: "continue",
+                                            default: true
+                                        }
+                                    ])
+                                        .then(function (inquirerResponse) {
+                                            if (inquirerResponse.continue === false) {
+                                                promptGo = false;
+                                                console.log("Thanks for using Liri! And have a nice day!")
+                                                return;
+                                            }
+                                            else {
+                                                askPrompt();
+                                            }
+                                        })
                                 });
                             })
                         break;
 
                     case "Movie This":
-                        console.log("I love Movies!");
+
+                        inquirer.prompt([
+                            {
+                                type: "input",
+                                message: "What movie do you want to search for?",
+                                name: "movieName",
+                                default: "Mr. Nobody"
+                            }
+                        ])
+                            .then(function (inquirerResponse) {
+                                console.log("movie test")
+
+                                var queryUrl = "http://www.omdbapi.com/?t=" + inquirerResponse.movieName + "&y=&plot=short&apikey=trilogy";
+
+                                request(queryUrl, function (error, response, body) {
+                                    if (error) {
+                                        console.log(err);
+                                    }
+                                    else {
+                                        console.log(body);
+                                        // console.log(response);
+                                    }
+                                });
+                            });
+
+
+                        inquirer.prompt([
+                            {
+                                type: "confirm",
+                                message: "Do you want to continue?",
+                                name: "continue",
+                                default: true
+                            }
+                        ])
+                            .then(function (inquirerResponse) {
+                                if (inquirerResponse.continue === false) {
+                                    promptGo = false;
+                                    console.log("Thanks for using Liri! And have a nice day!")
+                                    return;
+                                }
+                                else {
+                                    askPrompt();
+                                }
+                            })
+
                         break;
 
                     case "Do What it Says":
