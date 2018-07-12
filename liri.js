@@ -129,8 +129,7 @@ var askPrompt = function () {
                                 name: "movieName",
                                 default: "Mr. Nobody"
                             }
-                        ])
-                            .then(function (inquirerResponse) {
+                        ]).then(function (inquirerResponse) {
                                 console.log("movie test")
 
                                 var queryUrl = "http://www.omdbapi.com/?t=" + inquirerResponse.movieName + "&y=&plot=short&apikey=trilogy";
@@ -140,31 +139,52 @@ var askPrompt = function () {
                                         console.log(err);
                                     }
                                     else {
-                                        console.log(body);
-                                        // console.log(response);
+
+                                        var jsonData = JSON.parse(body);
+
+                                        var movieData = [
+                                            "Title: " + jsonData.Title,
+                                            "Year Rleased: " + jsonData.Year,
+                                            "IMDB Rating: " + jsonData.Ratings[0].Value,
+                                            "Rotten Tomatoes Rating: " + jsonData.Ratings[1].Value,
+                                            "Country movie was made: " + jsonData.Country,
+                                            "Language: " + jsonData.Language,
+                                            "Plot: " + jsonData.Plot,
+                                            "Actors: " + jsonData.Actors
+
+                                        ]
+                                        
+                                        console.log(movieData);
+                                        
+                                        
+
+
+                                        inquirer.prompt([
+                                            {
+                                                type: "confirm",
+                                                message: "Do you want to continue?",
+                                                name: "continue",
+                                                default: true
+                                            }
+                                        ])
+                                            .then(function (inquirerResponse) {
+                                                if (inquirerResponse.continue === false) {
+                                                    promptGo = false;
+                                                    console.log("Thanks for using Liri! And have a nice day!")
+                                                    return;
+                                                }
+                                                else {
+                                                    askPrompt();
+                                                }
+                                            })
                                     }
                                 });
+
+                                
                             });
 
 
-                        inquirer.prompt([
-                            {
-                                type: "confirm",
-                                message: "Do you want to continue?",
-                                name: "continue",
-                                default: true
-                            }
-                        ])
-                            .then(function (inquirerResponse) {
-                                if (inquirerResponse.continue === false) {
-                                    promptGo = false;
-                                    console.log("Thanks for using Liri! And have a nice day!")
-                                    return;
-                                }
-                                else {
-                                    askPrompt();
-                                }
-                            })
+                        
 
                         break;
 
