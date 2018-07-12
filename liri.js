@@ -1,6 +1,6 @@
 require("dotenv").config();
 
-
+// Specifying all my npm requirements.
 var inquirer = require("inquirer");
 var Spotify = require('node-spotify-api');
 var Twitter = require('twitter');
@@ -8,14 +8,16 @@ var key = require("./key.js");
 var request = require('request');
 var fs = require("fs");
 
-console.log(key);
+// console.log(key);
 
+// keys for both Spotify and Twitter, stored in other js file.
 var spotify = new Spotify(key.spotify);
 var client = new Twitter(key.twitter);
 
-
+// variable for recurssion loop whether to re-prompt.
 var promptGo = true;
 
+// The main prompt for Liri to ask what you want to do.
 var askPrompt = function () {
     if (promptGo === true) {
         inquirer.prompt([
@@ -74,26 +76,10 @@ function twitterAPI() {
     var params = { screen_name: 'Antonath' };
     client.get('statuses/user_timeline', params, function (error, tweets, response) {
         if (!error) {
-            console.log("Tweet #1: " + tweets[0].text);
-            console.log("Tweet #2: " + tweets[1].text);
-            console.log("Tweet #3: " + tweets[2].text);
-            console.log("Tweet #4: " + tweets[3].text);
-            console.log("Tweet #5: " + tweets[4].text);
-            console.log("Tweet #6: " + tweets[5].text);
-            console.log("Tweet #7: " + tweets[6].text);
-            console.log("Tweet #8: " + tweets[7].text);
-            console.log("Tweet #9: " + tweets[8].text);
-            console.log("Tweet #10: " + tweets[9].text);
-            console.log("Tweet #11: " + tweets[10].text);
-            console.log("Tweet #12: " + tweets[11].text);
-            console.log("Tweet #13: " + tweets[12].text);
-            console.log("Tweet #14: " + tweets[13].text);
-            console.log("Tweet #15: " + tweets[14].text);
-            console.log("Tweet #16: " + tweets[15].text);
-            console.log("Tweet #17: " + tweets[16].text);
-            console.log("Tweet #18: " + tweets[17].text);
-            console.log("Tweet #19: " + tweets[18].text);
-            console.log("Tweet #20: " + tweets[19].text);
+            for(i = 0; i < 20; i++){
+                console.log("Tweet!: " + tweets[i].text);
+            }
+            
 
             inquirer.prompt([
                 {
