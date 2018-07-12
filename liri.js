@@ -1,10 +1,12 @@
 require("dotenv").config();
 
+
 var inquirer = require("inquirer");
 var Spotify = require('node-spotify-api');
 var Twitter = require('twitter');
 var key = require("./key.js");
 var request = require('request');
+var fs = require("fs");
 
 console.log(key);
 
@@ -130,17 +132,23 @@ var askPrompt = function () {
                                 default: "Mr. Nobody"
                             }
                         ]).then(function (inquirerResponse) {
-                                console.log("movie test")
+                                
 
                                 var queryUrl = "http://www.omdbapi.com/?t=" + inquirerResponse.movieName + "&y=&plot=short&apikey=trilogy";
 
                                 request(queryUrl, function (error, response, body) {
-                                    if (error) {
-                                        console.log(err);
+
+                                    var jsonData = JSON.parse(body);
+
+                                    if (!jsonData.Title) {
+                                        
+                                        console.log("That is not a real movie.");
+
+                                        askPrompt();
                                     }
                                     else {
 
-                                        var jsonData = JSON.parse(body);
+                                        
 
                                         var movieData = [
                                             "Title: " + jsonData.Title,
@@ -151,9 +159,8 @@ var askPrompt = function () {
                                             "Language: " + jsonData.Language,
                                             "Plot: " + jsonData.Plot,
                                             "Actors: " + jsonData.Actors
-
                                         ]
-                                        
+                                        // console.log(jsonData);
                                         console.log(movieData);
                                         
                                         
@@ -189,7 +196,45 @@ var askPrompt = function () {
                         break;
 
                     case "Do What it Says":
-                        console.log("I will do what you command!");
+                         
+                        fs.readFile("./random.txt", "utf8", function(error, data){
+                          var doThis =  data.split(",");
+                            console.log(doThis[1]);
+                           var  doThisToo = doThis[1];
+                        
+                            
+                        spotify.search({ type: 'track', query: doThisToo }, function (err, data) {
+                            if (err) {
+                                return console.log('Error occurred: ' + err);
+                            }
+
+                            console.log("Song Name: " + data.tracks.items[1].name);
+                            console.log("Artists Name: " + data.tracks.items[1].artists[0].name);
+                            console.log("Album Name: " + data.tracks.items[1].album.name);
+                            console.log("href: " + data.tracks.href);
+
+                            inquirer.prompt([
+                                {
+                                    type: "confirm",
+                                    message: "Do you want to continue?",
+                                    name: "continue",
+                                    default: true
+                                }
+                            ])
+                                .then(function (inquirerResponse) {
+                                    if (inquirerResponse.continue === false) {
+                                        promptGo = false;
+                                        console.log("Thanks for using Liri! And have a nice day!")
+                                        return;
+                                    }
+                                    else {
+                                        askPrompt();
+                                    }
+                                })
+                        });
+
+                    });
+
                         break;
 
                     default: console.log("That is not a valid option.")
